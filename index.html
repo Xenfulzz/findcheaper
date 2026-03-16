@@ -169,6 +169,66 @@ box-shadow:0 0 25px rgba(34,197,94,0.45);
 
 footer{margin-top:auto;padding:25px;text-align:center;color:#6b7280;font-size:13px}
 
+
+/* ---------------- MOBILE RESPONSIVE ---------------- */
+@media (max-width: 768px){
+
+header{padding:14px 18px}
+
+nav{
+display:none; /* hide nav on small screens for now */
+}
+
+.hero{
+padding:90px 16px 70px;
+}
+
+.hero h1{
+font-size:34px;
+line-height:1.15;
+}
+
+.subtitle{
+font-size:14px;
+padding:0 10px;
+}
+
+.search-box{
+flex-direction:column;
+border-radius:12px;
+}
+
+.search-box input{
+padding:14px;
+font-size:15px;
+}
+
+.search-box button{
+width:100%;
+padding:12px;
+}
+
+.cta button{
+width:100%;
+max-width:260px;
+font-size:15px;
+}
+
+.results{
+margin:30px 12px;
+}
+
+th,td{
+padding:12px 10px;
+font-size:14px;
+}
+
+.product-card{
+margin:30px 12px 0;
+}
+
+}
+
 </style>
 </head>
 <body>
@@ -189,7 +249,7 @@ footer{margin-top:auto;padding:25px;text-align:center;color:#6b7280;font-size:13
 <div class="particles"></div>
 
 <div class="badge">FAST • SIMPLE • PRICE CHECK</div>
-<h1>Find The <span>Cheapest Price</span> Instantly</h1>
+<h1>Find The <span>Cheapest Price</span><br>Instantly</h1>
 <p class="subtitle">Compare real prices across UK retailers.</p>
 
 <div class="search-box">
