@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find It Cheaper</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,Helvetica,sans-serif}
+body{background:#020617;color:#e5e7eb;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+
+header{padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #0f172a}
+
+.logo{display:flex;align-items:center;font-size:20px;font-weight:800;letter-spacing:.5px;color:white}
+
+.logo-icon{
+width:32px;height:32px;border-radius:8px;margin-right:10px;display:flex;align-items:center;justify-content:center;
+background:linear-gradient(135deg,#22c55e,#16a34a);
+color:#022c22;font-weight:900;font-size:16px;
+box-shadow:0 0 18px rgba(34,197,94,0.6);
+animation:logoGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow{
+0%{box-shadow:0 0 12px rgba(34,197,94,0.3)}
+100%{box-shadow:0 0 25px rgba(34,197,94,0.8)}
+}
+
+.logo-text span{color:#22c55e}
+
+nav a{margin-left:30px;text-decoration:none;color:#9ca3af;font-size:14px;transition:.2s}
+nav a:hover{color:white}
+
+.hero{
+text-align:center;
+padding:140px 20px 100px;
+position:relative;
+overflow:hidden;
+}
+
+/* softer centered glow behind headline */
+.hero{
+text-align:center;
+padding:140px 20px 100px;
+position:relative;
+overflow:hidden;
+background:
+radial-gradient(700px 320px at 50% 30%, rgba(34,197,94,0.14), rgba(34,197,94,0.06) 40%, transparent 70%),
+radial-gradient(500px 240px at 50% 35%, rgba(34,197,94,0.10), transparent 75%),
+linear-gradient(to bottom,#020617 0%,#020617 100%);
+}
+
+/* very subtle moving light so it doesn't look static */
+.hero::before{
+content:"";
+position:absolute;
+top:30%;
+left:50%;
+transform:translate(-50%,-50%);
+width:900px;
+height:500px;
+background:radial-gradient(ellipse at center, rgba(34,197,94,0.10), transparent 70%);
+filter:blur(80px);
+opacity:.5;
+pointer-events:none;
+animation:softMove 16s ease-in-out infinite;
+}
+
+@keyframes softMove{
+0%{transform:translate(-50%,-50%) scale(1)}
+50%{transform:translate(-50%,-48%) scale(1.03)}
+100%{transform:translate(-50%,-50%) scale(1)}
+}
+50%{transform:translateY(20px) scale(1.05)}
+100%{transform:translateY(-20px) scale(1)}
+}
+50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
+100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}
+}
+
+.hero > *{position:relative;z-index:2}
+
+.badge{background:#052e16;color:#4ade80;display:inline-block;padding:6px 14px;border-radius:999px;font-size:12px;margin-bottom:25px;letter-spacing:.5px}
+
+.hero h1{font-size:58px;line-height:1.1;font-weight:800;margin-bottom:20px}
+.hero h1 span{color:#22c55e}
+
+.subtitle{color:#9ca3af;max-width:650px;margin:0 auto 40px;font-size:16px}
+
+/* floating particles */
+.particles span{
+position:absolute;
+width:4px;height:4px;
+background:#22c55e;border-radius:50%;
+opacity:.4;
+animation:float 10s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+100%{transform:translateY(-1000px)}
+}
+
+.search-box{
+max-width:650px;margin:0 auto;display:flex;background:#020617;border:1px solid #0f172a;border-radius:12px;overflow:hidden;
+transition:.25s;
+box-shadow:0 0 0 1px rgba(34,197,94,0.15);
+}
+
+.search-box:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 30px rgba(0,0,0,.4),0 0 0 1px rgba(34,197,94,.25);
+}
+
+.search-box input{flex:1;padding:16px;background:transparent;border:none;color:white;font-size:15px}
+.search-box input:focus{outline:none}
+
+.search-box button{background:#22c55e;border:none;padding:0 22px;font-weight:700;cursor:pointer;color:#022c22;transition:.2s}
+.search-box button:hover{background:#16a34a}
+
+.cta{margin-top:30px}
+
+.cta button{
+background:#22c55e;border:none;padding:16px 32px;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;
+transition:.25s;
+box-shadow:0 6px 20px rgba(34,197,94,.35);
+}
+
+.cta button:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 30px rgba(34,197,94,.55);
+}
+
+/* product preview */
+.product-card{
+max-width:700px;margin:50px auto 0;background:#020617;border:1px solid #0f172a;border-radius:14px;padding:20px;display:none;
+box-shadow:0 10px 40px rgba(0,0,0,.4);
+}
+
+.product-title{font-size:18px;font-weight:600;margin-bottom:6px}
+.product-meta{color:#9ca3af;font-size:14px}
+
+.results{max-width:900px;margin:50px auto;background:#020617;border:1px solid #0f172a;border-radius:12px;overflow:hidden;display:none}
+
+.results-header{padding:18px 22px;border-bottom:1px solid #0f172a;font-weight:600}
+
+table{width:100%;border-collapse:collapse}
+
+th,td{padding:16px 22px;text-align:left}
+
+th{color:#9ca3af;font-weight:500;font-size:13px}
+
+tr{border-bottom:1px solid #0f172a}
+tr:last-child{border-bottom:none}
+
+.price{color:#22c55e;font-weight:700}
+
+.cheapest{
+background:rgba(34,197,94,0.08);
+box-shadow:0 0 25px rgba(34,197,94,0.45);
+}
+
+.save-badge{margin-left:8px;background:#052e16;color:#4ade80;padding:4px 8px;font-size:11px;border-radius:999px;font-weight:700}
+
+.store-btn{background:#22c55e;color:#022c22;padding:8px 14px;border-radius:6px;text-decoration:none;font-weight:700;font-size:13px;display:inline-block;transition:.2s}
+
+.store-btn:hover{background:#16a34a;transform:translateY(-1px)}
+
+.loading{padding:30px;text-align:center;color:#9ca3af}
+
+footer{margin-top:auto;padding:25px;text-align:center;color:#6b7280;font-size:13px}
+
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">
+<div class="logo-icon">£</div>
+<div class="logo-text">Find<span>Cheaper</span></div>
+</div>
+<nav>
+<a href="#">Home</a>
+<a href="#">How it Works</a>
+<a href="#">About</a>
+</nav>
+</header>
+
+<section class="hero">
+<div class="particles"></div>
+
+<div class="badge">FAST • SIMPLE • PRICE CHECK</div>
+<h1>Find The <span>Cheapest Price</span> Instantly</h1>
+<p class="subtitle">Compare real prices across UK retailers.</p>
+
+<div class="search-box">
+<input id="productInput" type="text" placeholder="Search any product...">
+<button id="pasteBtn">Paste</button>
+</div>
+
+<div class="cta">
+<button id="searchBtn">Search Prices</button>
+</div>
+
+<div class="product-card" id="productCard">
+<div class="product-title" id="productTitle"></div>
+<div class="product-meta">Average demo price shown below</div>
+</div>
+
+</section>
+
+<div class="results" id="resultsBox">
+<div class="results-header">Price Results</div>
+<div id="loading" class="loading" style="display:none">Searching stores...</div>
+<table>
+<thead>
+<tr>
+<th>Store</th>
+<th>Price</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="resultsTable"></tbody>
+</table>
+</div>
+
+<footer>
+UK price comparison tool
+</footer>
+
+<script>
+
+const pasteBtn = document.getElementById("pasteBtn")
+const searchBtn = document.getElementById("searchBtn")
+const input = document.getElementById("productInput")
+const table = document.getElementById("resultsTable")
+const resultsBox = document.getElementById("resultsBox")
+const loading = document.getElementById("loading")
+const productCard = document.getElementById("productCard")
+const productTitle = document.getElementById("productTitle")
+
+// generate floating particles
+const particleContainer=document.querySelector('.particles')
+for(let i=0;i<40;i++){
+const p=document.createElement('span')
+p.style.left=Math.random()*100+'%'
+p.style.top=Math.random()*100+'%'
+p.style.animationDuration=6+Math.random()*10+'s'
+particleContainer.appendChild(p)
+}
+
+pasteBtn.onclick = async () => {
+try{
+const text = await navigator.clipboard.readText()
+input.value = text
+}catch(e){
+alert("Clipboard blocked")
+}
+}
+
+function runSearch(){
+
+const query = input.value.trim()
+if(!query) return
+
+productCard.style.display="block"
+productTitle.innerText=query
+
+resultsBox.style.display = "block"
+loading.style.display = "block"
+loading.innerText = "Searching stores..."
+
+table.innerHTML = ""
+
+setTimeout(()=>{
+
+const stores=["Amazon","eBay","Currys","Argos","John Lewis","Tesco","ASDA","Boots","Very","AO"]
+
+const results=stores.map(s=>({
+store:s,
+price:+(Math.random()*120+80).toFixed(2),
+link:`https://www.google.com/search?q=${encodeURIComponent(query+' '+s)}`
+}))
+
+renderResults(results)
+
+},800)
+
+}
+
+searchBtn.onclick = runSearch
+
+input.addEventListener("keydown",e=>{
+if(e.key === "Enter") runSearch()
+})
+
+function renderResults(results){
+
+loading.style.display="none"
+
+results.sort((a,b)=>a.price-b.price)
+
+const highest=Math.max(...results.map(r=>r.price))
+
+let html=""
+
+results.forEach((r,i)=>{
+
+let save=highest-r.price
+
+html+=`<tr class="${i===0?'cheapest':''}">
+<td>${r.store}</td>
+<td class="price">£${r.price.toFixed(2)} ${i===0?`<span class="save-badge">Save £${save.toFixed(2)}</span>`:''}</td>
+<td><a class="store-btn" target="_blank" href="${r.link}">View</a></td>
+</tr>`
+
+})
+
+table.innerHTML=html
+
+}
+
+</script>
+
+</body>
+</html>
